@@ -1,5 +1,32 @@
 <html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="./static/css/styles.css"/>
+        <script type="text/javascript" src="./static/js/paper-full.min.js"></script>
+        <script type="text/javascript">
+            paper.install(window);
+            window.onload = () => {
+                paper.setup("mainCanvas");
+                let tool = new Tool();
+                let myPath;
+
+                tool.onMouseDown = (event) => {
+                    myPath = new Path();
+                    myPath.strokeColor = 'black';
+                }
+
+                tool.onMouseDrag = (event) => {
+                    myPath.add(event.point);
+                }
+            }
+
+            let saveContents = () => {
+                let contents = paper.project.exportJSON();
+                console.log(contents);
+            }
+        </script>
+    </head>
     <body>
-        <p>Home page</p>
+        <canvas id="mainCanvas" resize></canvas>
+        <button onclick="exportContents()">Press</button>
     </body>
 </html>

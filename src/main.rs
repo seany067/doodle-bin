@@ -1,4 +1,5 @@
 #[macro_use] extern crate rocket;
+use rocket::fs::FileServer;
 use rocket_dyn_templates::Template;
 use std::collections::HashMap;
 
@@ -11,5 +12,5 @@ fn index() -> Template {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().attach(Template::fairing()).mount("/", routes![index])
+    rocket::build().attach(Template::fairing()).mount("/", routes![index]).mount("/static", FileServer::from("static/"))
 }
