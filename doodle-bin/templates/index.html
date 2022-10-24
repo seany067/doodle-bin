@@ -26,10 +26,20 @@
             }).then((res) => {
                 if (res.ok) {
                     return res.json()
+                } else {
+                    return null;
                 }
             }).then((project) => {
-                let p = JSON.parse(project["content"])
-                paper.project.importJSON(p);
+                if (project !== null) {
+                    let p = JSON.parse(project["content"])
+                    paper.project.importJSON(p);
+                }
+            }).finally(() => {
+                project.currentStyle = {
+                    strokeColor: '#000000',
+                    fillColor: 'transparent',
+                    strokeWidth: 1
+                }
             });
 
             paper.setup("mainCanvas");
@@ -49,8 +59,16 @@
 </head>
 
 <body>
-    <canvas id="mainCanvas" resize></canvas>
-    <button onclick="saveContents()">Press</button>
+    <div class="container">
+        <div class="sidebar">
+            <button onclick="saveContents()">Save</button>
+            <button onclick="saveContents()">Undo</button>
+            <button onclick="saveContents()">Redo</button>
+            <button onclick="saveContents()">Draw</button>
+            <button onclick="saveContents()">Erase</button>
+        </div>
+        <canvas id="mainCanvas" resize></canvas>
+    </div>
 </body>
 
 </html>

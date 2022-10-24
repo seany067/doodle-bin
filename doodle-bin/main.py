@@ -70,5 +70,5 @@ async def load(request: Request, id: str):
         table = request.app.state.db.Table(table_name)
         res = table.get_item(Key={'id': id})
         return res["Item"]
-    except ClientError as e:
+    except:
         raise HTTPException(status_code=404, detail="Doodle not found")
