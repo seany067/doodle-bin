@@ -46,13 +46,19 @@
             let tool = new Tool();
             let myPath;
 
-            tool.onMouseDown = (event) => {
-                myPath = new Path();
-                myPath.strokeColor = 'black';
-            }
+            let IN_IFRAME = window.location !== window.parent.location
 
-            tool.onMouseDrag = (event) => {
-                myPath.add(event.point);
+            if (!IN_IFRAME) {
+                tool.onMouseDown = (event) => {
+                    myPath = new Path();
+                    myPath.strokeColor = 'black';
+                }
+
+                tool.onMouseDrag = (event) => {
+                    myPath.add(event.point);
+                }
+            } else {
+                document.getElementsByClassName("sidebar")[0].style.display = "none"
             }
         }
     </script>

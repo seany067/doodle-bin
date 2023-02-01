@@ -1,6 +1,7 @@
 import os
 import uuid
 import boto3
+from dotenv import dotenv_values
 from typing import Optional
 from botocore.exceptions import ClientError
 from pathlib import Path
@@ -21,12 +22,17 @@ class Model(BaseModel):
     id: Optional[str]
     content: Optional[str]
 
+if not os.environ.get("DB_REGION_NAME", False):
+    env = dotenv_values("/run/secrets/aws")
+else:
+    env = os.environ
+
 #AWS
 
 AWS_SETTINGS = {
-    "aws_access_key_id": os.environ.get("DB_ACCESS_KEY_ID"),
-    "aws_secret_access_key": os.environ.get("DB_SECRET_ACCESS_KEY"),
-    "region_name": os.environ.get("DB_REGION_NAME")
+    "aws_access_key_id": env.get("DB_ACCESS_KEY_ID"),
+    "aws_secret_access_key": env.get("DB_SECRET_ACCESS_KEY"),
+    "region_name": env.get("DB_REGION_NAME")
 }
 
 table_name = "doodle-bin"
