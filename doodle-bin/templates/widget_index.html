@@ -32,6 +32,9 @@
                     fillColor: 'transparent',
                     strokeWidth: 1
                 }
+                let svg = paper.project.exportSVG();
+                document.getElementsByClassName("embedly-card")[0].appendChild(svg);
+                document.getElementById("mainCanvas").hidden = "hidden";
             });
 
             paper.setup("mainCanvas");
@@ -42,23 +45,9 @@
 </head>
 
 <body>
-    <blockquote class="embedly-card">
-        <div class="container">
-            <canvas id="mainCanvas" resize></canvas>
-        </div>
-    </blockquote>
-    <script>
-        (function (w, d) {
-            var id = 'embedly-platform', n = 'script';
-            if (!d.getElementById(id)) {
-                w.embedly = w.embedly || function () { (w.embedly.q = w.embedly.q || []).push(arguments); };
-                var e = d.createElement(n); e.id = id; e.async = 1;
-                e.src = ('https:' === document.location.protocol ? 'https' : 'http') + '://cdn.embedly.com/widgets/platform.js';
-                var s = d.getElementsByTagName(n)[0];
-                s.parentNode.insertBefore(e, s);
-            }
-        })(window, document);
-    </script>
+    <canvas id="mainCanvas" resize></canvas>
+    <blockquote class="embedly-card"></blockquote>
+    <script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
 </body>
 
 </html>
