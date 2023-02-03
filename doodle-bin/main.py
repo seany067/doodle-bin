@@ -10,13 +10,13 @@ from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.exceptions import HTTPException
+from fastapi.templating import Jinja2Templates
 
 # Setup
 
 ROOT_DIR = Path(__file__).parent
 
-with open(ROOT_DIR / "templates/index.html", "r") as f:
-        html_content =  f.read()
+templates = Jinja2Templates(directory=ROOT_DIR / "templates")
 
 class Model(BaseModel):
     id: Optional[str]
@@ -54,19 +54,19 @@ def index():
 
 @app.get("/{id}")
 def index(request: Request, id: uuid.UUID):
-    return HTMLResponse(
-        content=html_content,
-        status_code=200
-    )
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/widget/{id}")
+def widge_index(request: Request, id: uuid.UUID):
+    return templates.TemplateResponse("widget_index.html", {"request": request})
  
 @app.post("/{id}")
 async def save(request: Request, id: str, body: Model):
     table = request.app.state.db.Table(table_name)
     try:
-        res = table.put_item(Item={'id': id, 'content': body.content})
-    except ClientError as e:
-        raise e
-        # raise HTTPException(status_code=404, detail="Doodle could not be saved found")
+        table.put_item(Item={'id': id, 'content': body.content})
+    except ClientError:
+        raise HTTPException(status_code=404, detail="Doodle could not be saved found")
     return Response("Ok", status_code=200)
 
 

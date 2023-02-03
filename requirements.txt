@@ -10,3 +10,4 @@ botocore==1.27.95
 s3transfer==0.6.0
 uvicorn==0.19.0
 python-dotenv==0.21.1
+Jinja2==3.1.2

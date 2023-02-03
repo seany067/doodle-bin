@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css" />
+    <script type="text/javascript" src="/static/js/paper-full.min.js"></script>
+    <script type="text/javascript">
+        let origin = window.location.origin;
+        paper.install(window);
+        let urlParts = window.location.pathname.split("/");
+        window.onload = () => {
+            let urlParts = window.location.pathname.split("/");
+            fetch(`${origin}/load/${urlParts[urlParts.length - 1]}`, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then((res) => {
+                if (res.ok) {
+                    return res.json()
+                } else {
+                    return null;
+                }
+            }).then((project) => {
+                if (project !== null) {
+                    let p = JSON.parse(project["content"])
+                    paper.project.importJSON(p);
+                }
+            }).finally(() => {
+                project.currentStyle = {
+                    strokeColor: '#000000',
+                    fillColor: 'transparent',
+                    strokeWidth: 1
+                }
+            });
+
+            paper.setup("mainCanvas");
+            let tool = new Tool();
+            let myPath;
+        }
+    </script>
+</head>
+
+<body>
+    <blockquote class="embedly-card">
+        <div class="container">
+            <canvas id="mainCanvas" resize></canvas>
+        </div>
+    </blockquote>
+    <script>
+        (function (w, d) {
+            var id = 'embedly-platform', n = 'script';
+            if (!d.getElementById(id)) {
+                w.embedly = w.embedly || function () { (w.embedly.q = w.embedly.q || []).push(arguments); };
+                var e = d.createElement(n); e.id = id; e.async = 1;
+                e.src = ('https:' === document.location.protocol ? 'https' : 'http') + '://cdn.embedly.com/widgets/platform.js';
+                var s = d.getElementsByTagName(n)[0];
+                s.parentNode.insertBefore(e, s);
+            }
+        })(window, document);
+    </script>
+</body>
+
+</html>
