@@ -21,6 +21,7 @@ templates = Jinja2Templates(directory=ROOT_DIR / "templates")
 class Model(BaseModel):
     id: Optional[str]
     content: Optional[str]
+    image: Optional[str]
 
 if not os.environ.get("DB_REGION_NAME", False):
     env = dotenv_values("/run/secrets/aws")
@@ -58,13 +59,22 @@ def index(request: Request, id: uuid.UUID):
 
 @app.get("/widget/{id}")
 def widge_index(request: Request, id: uuid.UUID):
-    return templates.TemplateResponse("widget_index.html", {"request": request})
+    try:
+        table = request.app.state.db.Table(table_name)
+        res = table.get_item(Key={'id': str(id)})
+    except:
+        raise HTTPException(status_code=404, detail="Doodle not found")
+
+    if res is None or 'image' not in res["Item"]:
+        raise HTTPException(status_code=404, detail="Doodle not found")
+    
+    return Response(res["Item"]["image"], status_code=200, headers={"Content-type": "image/svg+xml"})
  
 @app.post("/{id}")
 async def save(request: Request, id: str, body: Model):
     table = request.app.state.db.Table(table_name)
     try:
-        table.put_item(Item={'id': id, 'content': body.content})
+        table.put_item(Item={'id': id, 'content': body.content, 'image': body.image})
     except ClientError:
         raise HTTPException(status_code=404, detail="Doodle could not be saved found")
     return Response("Ok", status_code=200)

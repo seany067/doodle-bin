@@ -6,12 +6,14 @@
     <script type="text/javascript" src="./static/js/paper-full.min.js"></script>
     <script type="text/javascript">
         let origin = window.location.origin;
+        let serializer = new XMLSerializer();
         
         function saveContents() {
             let contents = paper.project.exportJSON();
+            let svg = paper.project.exportSVG();
             fetch(`${origin}${window.location.pathname}`, {
                 method: 'POST',
-                body: JSON.stringify({ 'id': window.location.pathname.replace("/", ""), 'content': contents }),
+                body: JSON.stringify({ 'id': window.location.pathname.replace("/", ""), 'content': contents, 'image': serializer.serializeToString(svg) }),
                 headers: {
                     "Content-Type": "application/json"
                 }
